@@ -58,3 +58,41 @@ Interfaces with an external ADC through SPI for real data acquisition.
 ---
 
 ## System Architecture
+
+### Flow
+
+1. A sample source generates ADC data  
+2. FPGA capture logic acquires and stores samples  
+3. Buffered samples are transmitted over UART  
+4. A Python script receives and logs the data  
+5. Analysis scripts process and visualize results  
+
+---
+
+## Repository Structure
+
+
+---
+
+## Key Modules
+
+- `spi_master.v` — SPI interface for ADC communication  
+- `adc_capture.v` — Sampling and control logic  
+- `sample_buffer.v` — On-chip memory for storing samples  
+- `uart_tx.v` — UART transmitter  
+- `top_student_adc_platform.v` — Top-level integration  
+
+---
+
+## UART Data Format
+
+Each 10-bit sample is transmitted as two bytes:
+
+- Byte 1: upper 2 bits (stored in bits `[1:0]`)  
+- Byte 2: lower 8 bits  
+
+Reconstruction on the host:
+
+```python
+sample = ((byte1 & 0x03) << 8) | byte2
+
